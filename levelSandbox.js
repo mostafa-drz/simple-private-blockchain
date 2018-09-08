@@ -34,6 +34,16 @@ function addDataToLevelDB(value) {
     });
 }
 
+function getNumberOfRecordsInDB() {
+    let i = 0;
+    db.createReadStream().on("data", function(data) {
+        i++;
+    }).on("error", function(error) {
+        return console.log(error);
+    }).on("close", function() {
+        return i;
+    });
+}
 /* ===== Testing ==============================================================|
 |  - Self-invoking function to add blocks to chain                             |
 |  - Learn more:                                                               |
@@ -55,5 +65,6 @@ function addDataToLevelDB(value) {
 
 module.exports = {
     getLevelDBData,
-    addDataToLevelDB
+    addDataToLevelDB,
+    getNumberOfRecordsInDB
 }
