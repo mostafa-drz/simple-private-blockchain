@@ -19,7 +19,6 @@ function validateTheChain() {
             })
         })
     }, 1000);
-
 }
 
 function validateTheChainSuccess(data) {

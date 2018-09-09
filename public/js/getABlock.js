@@ -51,9 +51,6 @@ function clearGetABlockAlerts() {
 
     $("#get-block-error").css('display', 'none');
     $("#get-block-error").text('');
-
-
-
     $("#block-data").css('display', 'none');
     $("#block-data").text('');
 
