@@ -10,13 +10,18 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 const Blockchain = require('./simpleChain');
+const chain = new Blockchain();
 app.get('/', (req, res) => {
     res.render('index.ejs');
 });
 app.post('/add-to-block', (req, res) => {
-    console.log(req.body);
+    chain.addBlock(req.body).then(() => {
+        res.status(200).send();
+    }).catch((err) => {
+        res.status(500).send(err);
+    })
 })
-app.listen(process.env.PORT || 3000, (error) => {
+app.listen(process.env.PORT || 3003, (error) => {
     if (error) {
         console.log(error);
     }

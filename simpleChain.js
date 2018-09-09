@@ -4,7 +4,6 @@ const {
     getLevelDBData,
     getNumberOfRecordsInDB
 } = require('./levelSandbox');
-
 class Block {
     constructor(data) {
         this.hash = "",
@@ -15,7 +14,7 @@ class Block {
     }
 }
 
-class Blockchain {
+export default class Blockchain {
     constructor() {
         this.addBlock(new Block("First block in the chain - Genesis block"));
     }
@@ -99,8 +98,8 @@ class Blockchain {
         });
     }
 
-    async validateChain() {
-        return new Promise((resolve, reject) => {
+    validateChain() {
+        return new Promise(async(resolve, reject) => {
             try {
                 let errorLog = [];
                 const BLOCK_HEIGHT = await this.getBlockHeight();
@@ -134,8 +133,4 @@ class Blockchain {
             }
         });
     }
-}
-
-module.exports = {
-    Blockchain
 }
