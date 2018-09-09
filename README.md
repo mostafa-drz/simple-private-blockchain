@@ -9,7 +9,7 @@ As the user interface a simple web application is added to this project. <b>Plea
 To install clone the repository from github by running:
 
 ```
-clone
+clone https://github.com/mostafa69d/simple-private-blockchain.git
 ```
 
 Then change your current directory to the project directory and run the npm install to install all dependencies:
