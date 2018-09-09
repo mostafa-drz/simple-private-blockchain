@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
         <div class="row">
             <div class="container">
                 <h2>Add a block</h2>
@@ -52,15 +52,22 @@
                 <p id="validation-result"></p>
                 <p id="validation-a-block-eror" class="alert alert-danger"></p>
             </div>
-
         </div>
+        <hr />
         <div class="row">
-            <h2>Validate the block chain</h2>
+            <div class="container">
+                <h2>Validate the block chain</h2>
+                <button class="btn btn-primary" id="btn-validate-the-chain">Validate</button>
+                <p id="chain-validation-result"></p>
+                <p id="chain-validation-error" class="alert alert-danger"></p>
+            </div>
+
         </div>
     </div>
     <script src="/js/addBlock.js"></script>
     <script src="/js/getABlock.js"></script>
     <script src="/js/validateABlock.js"></script>
+    <script src="/js/validateTheChain.js"></script>
 </body>
 
 </html>

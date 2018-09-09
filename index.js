@@ -63,6 +63,18 @@ app.get('/validate-a-block/:id', (req, res) => {
         console.log(error);
     }
 });
+
+app.get('/validate-the-chain', (req, res) => {
+    try {
+        chain.validateChain().then((result) => {
+            res.status(200).send(result);
+        }).catch((error) => {
+            res.status(400).send(error);
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
 app.listen(process.env.PORT || 3003, (error) => {
     if (error) {
         console.log(error);

@@ -7,6 +7,8 @@ body {
 #block-data,
 #get-block-error,
 #validation-result,
-#validation-a-block-eror {
+#validation-a-block-eror,
+#chain-validation-result,
+#chain-validation-error {
     display: none;
 }
