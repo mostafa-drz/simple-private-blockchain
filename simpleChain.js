@@ -15,61 +15,124 @@ class Block {
     }
 }
 
-
 class Blockchain {
     constructor() {
         this.addBlock(new Block("First block in the chain - Genesis block"));
     }
     addBlock(newBlock) {
-        newBlock.height = this.chain.length;
-        newBlock.time = new Date().getTime().toString().slice(0, -3);
-        if (this.chain.length > 0) {
-            newBlock.previousBlockHash = this.chain[this.chain.length - 1].hash;
-        }
+        return new Promise((resolve, reject) => {
+            newBlock.height = this.chain.length;
+            newBlock.time = new Date().getTime().toString().slice(0, -3);
+            if (this.chain.length > 0) {
+                newBlock.previousBlockHash = this.chain[this.chain.length - 1].hash;
+            }
+            newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
+            addDataToLevelDB(newBlock).then(() => {
+                return resolve();
+            }).catch((err) => {
+                return reject({
+                    error: {
+                        message: 'Something went wrong when tried to add a block to the chain',
+                        main: err
+                    }
+                })
+            })
+        });
 
-        newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
-
-        addDataToLevelDB(newBlock);
     }
 
 
     getBlockHeight() {
-        return getNumberOfRecordsInDB();
+        return new Promise((resolve, reject) => {
+            getNumberOfRecordsInDB().then((height) => {
+                return resolve(height);
+            }).catch((err) => {
+                return reject({
+                    error: {
+                        message: 'Something went wrong when tried to get the height of the chain',
+                        main: err
+                    }
+                })
+            })
+        });
     }
     getBlock(blockHeight) {
         return JSON.parse(JSON.stringify(getLevelDBData(blockHeight)));
+        return new Promise((resolve, reject) => {
+            getLevelDBData(blockHeight).then((data) => {
+                return resolve(JSON.parse(JSON.stringify(data)));
+            }).catch((err) => {
+                return reject({
+                    error: {
+                        message: "Something went wrong when tried to get the block",
+                        main: err
+                    }
+                })
+            })
+        });
     }
 
     validateBlock(blockHeight) {
-        let block = this.getBlock(blockHeight);
-        let blockHash = block.hash;
-        block.hash = '';
-        let validBlockHash = SHA256(JSON.stringify(block)).toString();
-        if (blockHash === validBlockHash) {
-            return true;
-        } else {
-            console.log('Block #' + blockHeight + ' invalid hash:\n' + blockHash + '<>' + validBlockHash);
-            return false;
-        }
+        return new Promise((resolve, reject) => {
+            this.getBlock(blockHeight).then((block) => {
+                let blockHash = block.hash;
+                block.hash = '';
+                let validBlockHash = SHA256(JSON.stringify(block)).toString();
+                if (blockHash === validBlockHash) {
+                    return resolve({
+                        valid: true
+                    });
+                } else {
+                    return resolve({
+                        valid: false
+                    });
+                }
+            }).catch((err) => {
+                return reject({
+                    error: {
+                        message: 'Something went wrong when tried to validate the block',
+                        main: err
+                    }
+                })
+            })
+
+        });
     }
 
-    validateChain() {
-        let errorLog = [];
-        const BLOCK_HEIGHT = this.getBlockHeight();
-        for (var i = 0; i < BLOCK_HEIGHT; i++) {
-            if (!this.validateBlock(i)) errorLog.push(i);
-            let blockHash = this.getBlock(i).hash;
-            let previousHash = this.getBlock(i + 1).previousBlockHash;
-            if (blockHash !== previousHash) {
-                errorLog.push(i);
+    async validateChain() {
+        return new Promise((resolve, reject) => {
+            try {
+                let errorLog = [];
+                const BLOCK_HEIGHT = await this.getBlockHeight();
+                for (var i = 0; i < BLOCK_HEIGHT; i++) {
+                    const valid = await this.validateBlock(i);
+                    if (!valid) {
+                        errorLog.push(i)
+                    };
+                    let blockHash = await this.getBlock(i).hash;
+                    let previousHash = await this.getBlock(i + 1).previousBlockHash;
+                    if (blockHash !== previousHash) {
+                        errorLog.push(i);
+                    }
+                }
+                if (errorLog.length > 0) {
+                    return resolve({
+                        invalids: errorLog
+                    });
+                } else {
+                    return resolve({
+                        inavlids: null
+                    })
+                }
+            } catch (err) {
+                return reject({
+                    error: {
+                        message: 'Something went wrong when tried to validate the block',
+                        main: err
+                    }
+                })
             }
-        }
-        if (errorLog.length > 0) {
-            console.log('Block errors = ' + errorLog.length);
-            console.log('Blocks: ' + errorLog);
-        } else {
-            console.log('No errors detected');
-        }
+        });
     }
 }
 
