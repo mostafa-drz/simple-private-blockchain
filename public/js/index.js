@@ -6,17 +6,22 @@ function addToBlock() {
     const data = $("#data").val();
     axios.post('/add-to-block', {
         data
-    }).then(() => {
+    }).then((res) => {
         addToBlockSuccess();
-    }).catch(() => {
-        addToBlockError();
+    }).catch((error) => {
+        addToBlockError(error);
     })
 }
 
-function addToBlockSuccess() {
-    console.log('add to block');
+
+function addToBlockError(error) {
+    $("#add-to-block-error").css('display', 'block');
+    $("#add-to-block-error").text(error.message);
+    console.log(error);
 }
 
-function addToBlockError() {
-    console.log('add to block error');
+function addToBlockSuccess() {
+    $("#add-to-block-success").css('display', 'block');
+    $("#add-to-block-success").text('Block added successfully');
+    console.log('success');
 }

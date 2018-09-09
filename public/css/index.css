@@ -1,3 +1,8 @@
 body {
     background-color: #e1f5fe;
 }
+
+#add-to-block-error,
+#add-to-block-success {
+    display: none;
+}

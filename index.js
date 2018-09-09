@@ -9,17 +9,22 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
-const Blockchain = require('./simpleChain');
+import Blockchain from './simpleChain';
 const chain = new Blockchain();
 app.get('/', (req, res) => {
     res.render('index.ejs');
 });
 app.post('/add-to-block', (req, res) => {
-    chain.addBlock(req.body).then(() => {
-        res.status(200).send();
-    }).catch((err) => {
-        res.status(500).send(err);
-    })
+    try {
+        chain.addBlock(req.body).then((value) => {
+            console.log(value);
+            res.status(200).send(value);
+        }).catch((err) => {
+            res.status(500).send(err);
+        })
+    } catch (error) {
+        console.log(error);
+    }
 })
 app.listen(process.env.PORT || 3003, (error) => {
     if (error) {

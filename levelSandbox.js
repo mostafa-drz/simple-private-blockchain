@@ -10,14 +10,15 @@ const db = level(chainDB);
 function addLevelDBData(key, value) {
     return new Promise((resolve, reject) => {
         db.put(key, value, function(err) {
-            if (err) return reject({
-                error: {
-                    message: 'Block ' + key + ' submission failed',
-                    main: err
-                }
-            });
-            else {
-                return resolve();
+            if (err) {
+                reject({
+                    error: {
+                        message: 'Block ' + key + ' submission failed',
+                        main: err
+                    }
+                });
+            } else {
+                resolve(value);
             }
         })
     });
@@ -29,14 +30,14 @@ function getLevelDBData(key) {
     return new Promise((resolve, reject) => {
         db.get(key, function(err, value) {
             if (err) {
-                return reject({
+                reject({
                     error: {
                         message: 'Not Found!',
                         main: err
                     }
                 })
             }
-            return resolve(value);
+            resolve(value);
         })
     });
 
@@ -49,7 +50,7 @@ function addDataToLevelDB(value) {
         db.createReadStream().on('data', function(data) {
             i++;
         }).on('error', function(err) {
-            return reject({
+            reject({
                 error: {
                     message: 'Unable to read data stream!',
                     main: err
@@ -57,7 +58,7 @@ function addDataToLevelDB(value) {
             })
         }).on('close', function() {
             console.log('Block #' + i);
-            return addLevelDBData(i, value);
+            resolve(addLevelDBData(i, value));
         });
     });
 
@@ -69,14 +70,14 @@ function getNumberOfRecordsInDB() {
         db.createReadStream().on("data", function(data) {
             i++;
         }).on("error", function(err) {
-            return reject({
+            reject({
                 error: {
                     message: 'Could not get the number of records',
                     main: err
                 }
             })
         }).on("close", function() {
-            return resolve(i);
+            resolve(i);
         });
     });
 

@@ -19,27 +19,36 @@ export default class Blockchain {
         this.addBlock(new Block("First block in the chain - Genesis block"));
     }
     addBlock(newBlock) {
-        return new Promise((resolve, reject) => {
-            newBlock.height = this.chain.length;
-            newBlock.time = new Date().getTime().toString().slice(0, -3);
-            if (this.chain.length > 0) {
-                newBlock.previousBlockHash = this.chain[this.chain.length - 1].hash;
-            }
-            newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
-            addDataToLevelDB(newBlock).then(() => {
-                return resolve();
-            }).catch((err) => {
-                return reject({
+        return new Promise(async(resolve, reject) => {
+            try {
+                const height = await this.getBlockHeight();
+                newBlock.height = height;
+                newBlock.time = new Date().getTime().toString().slice(0, -3);
+                if (height > 0) {
+                    newBlock.previousBlockHash = await this.getBlock(height - 1).hash;
+                }
+                newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
+                addDataToLevelDB(newBlock).then((value) => {
+                    resolve(value);
+                }).catch((err) => {
+                    reject({
+                        error: {
+                            message: 'Something went wrong when tried to add a block to the chain',
+                            main: err
+                        }
+                    })
+                })
+            } catch (err) {
+                reject({
                     error: {
                         message: 'Something went wrong when tried to add a block to the chain',
                         main: err
                     }
                 })
-            })
+            }
         });
 
     }
-
 
     getBlockHeight() {
         return new Promise((resolve, reject) => {
