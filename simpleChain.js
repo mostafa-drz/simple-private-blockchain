@@ -16,12 +16,35 @@ class Block {
 
 export default class Blockchain {
     constructor() {
-        this.addBlock(new Block("First block in the chain - Genesis block"));
+        this.createGenesisBlock();
+    }
+    createGenesisBlock() {
+        return new Promise((resolve, reject) => {
+            const newBlock = new Block("First block in the chain - Genesis block");
+            newBlock.height = 0;
+            newBlock.time = new Date().getTime().toString().slice(0, -3);
+            newBlock.hash = '';
+            newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
+            addDataToLevelDB(JSON.stringify(newBlock)).then((value) => {
+                resolve(value);
+            }).catch((err) => {
+                reject({
+                    error: {
+                        message: 'Something went wrong when tried to add a block to the chain',
+                        main: err
+                    }
+                })
+            })
+        });
+
     }
     addBlock(newBlock) {
         return new Promise(async(resolve, reject) => {
             try {
                 const height = await this.getBlockHeight();
+                if (height === 0) {
+                    await this.createGenesisBlock();
+                }
                 newBlock.height = height;
                 newBlock.time = new Date().getTime().toString().slice(0, -3);
                 newBlock.hash = '';
