@@ -24,6 +24,7 @@ export default class Blockchain {
                 const height = await this.getBlockHeight();
                 newBlock.height = height;
                 newBlock.time = new Date().getTime().toString().slice(0, -3);
+                newBlock.hash = '';
                 if (height > 0) {
                     const lastBlock = await this.getBlock(height - 1);
                     newBlock.previousBlockHash = lastBlock.hash;
@@ -92,7 +93,6 @@ export default class Blockchain {
         return new Promise(async(resolve, reject) => {
             const chainHeight = await this.getBlockHeight();
             if (blockHeight > chainHeight) {
-                console.log('invalid block number')
                 return reject({
                     error: {
                         message: 'Invalid block number'
