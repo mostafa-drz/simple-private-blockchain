@@ -11,14 +11,14 @@ function addLevelDBData(key, value) {
     return new Promise((resolve, reject) => {
         db.put(key, value, function(err) {
             if (err) {
-                reject({
+                return reject({
                     error: {
                         message: 'Block ' + key + ' submission failed',
                         main: err
                     }
                 });
             } else {
-                resolve(value);
+                return resolve(value);
             }
         })
     });
@@ -30,14 +30,14 @@ function getLevelDBData(key) {
     return new Promise((resolve, reject) => {
         db.get(key, function(err, value) {
             if (err) {
-                reject({
+                return reject({
                     error: {
                         message: 'Not Found!',
                         main: err
                     }
                 })
             }
-            resolve(value);
+            return resolve(value);
         })
     });
 
@@ -50,7 +50,7 @@ function addDataToLevelDB(value) {
         db.createReadStream().on('data', function(data) {
             i++;
         }).on('error', function(err) {
-            reject({
+            return reject({
                 error: {
                     message: 'Unable to read data stream!',
                     main: err
@@ -58,7 +58,7 @@ function addDataToLevelDB(value) {
             })
         }).on('close', function() {
             console.log('Block #' + i);
-            resolve(addLevelDBData(i, value));
+            return resolve(addLevelDBData(i, value));
         });
     });
 
@@ -70,14 +70,14 @@ function getNumberOfRecordsInDB() {
         db.createReadStream().on("data", function(data) {
             i++;
         }).on("error", function(err) {
-            reject({
+            return reject({
                 error: {
                     message: 'Could not get the number of records',
                     main: err
                 }
             })
         }).on("close", function() {
-            resolve(i);
+            return resolve(i);
         });
     });
 

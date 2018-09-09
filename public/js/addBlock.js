@@ -23,5 +23,6 @@ function addToBlockError(error) {
 function addToBlockSuccess() {
     $("#add-to-block-success").css('display', 'block');
     $("#add-to-block-success").text('Block added successfully');
+    $("#data").val('');
     console.log('success');
 }

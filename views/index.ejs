@@ -27,9 +27,21 @@
                 <label id="add-to-block-success" class="alert alert-success"></label>
             </div>
         </div>
+        <hr />
         <div class="row">
-            <h2>Get a block</h2>
+            <div class="container">
+                <h2>Get a block</h2>
+                <div class="form-group">
+                    <label>Block Number:</label>
+                    <input type="text" class="form-control" id="block-number">
+
+                </div>
+                <button class="btn btn-primary" id="btn-get-block">Get the Block Data</button>
+                <p id="block-data" class="alert alert-info" style="word-break: break-all"></p>
+                <label id="get-block-error" class="alert alert-danger"></label>
+            </div>
         </div>
+        <hr />
         <div class="row">
             <h2>Validate a block</h2>
         </div>
@@ -37,7 +49,8 @@
             <h2>Validate the block chain</h2>
         </div>
     </div>
-    <script src="/js/index.js"></script>
+    <script src="/js/addBlock.js"></script>
+    <script src="/js/getABlock.js"></script>
 </body>
 
 </html>

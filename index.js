@@ -17,10 +17,28 @@ app.get('/', (req, res) => {
 app.post('/add-to-block', (req, res) => {
     try {
         chain.addBlock(req.body).then((value) => {
-            console.log(value);
-            res.status(200).send(value);
+            return res.status(200).send(value);
         }).catch((err) => {
-            res.status(500).send(err);
+            return res.status(500).send(err);
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/get-a-block/:id', (req, res) => {
+    if (req.params.id < 0) {
+        return res.status(400).send({
+            error: {
+                message: 'invalid block number'
+            }
+        })
+    }
+    try {
+        chain.getBlock(req.params.id).then((value) => {
+            res.status(200).send(value);
+        }).catch((error) => {
+            res.status(500).send(error);
         })
     } catch (error) {
         console.log(error);

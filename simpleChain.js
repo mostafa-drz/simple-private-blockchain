@@ -25,10 +25,11 @@ export default class Blockchain {
                 newBlock.height = height;
                 newBlock.time = new Date().getTime().toString().slice(0, -3);
                 if (height > 0) {
-                    newBlock.previousBlockHash = await this.getBlock(height - 1).hash;
+                    const lastBlock = await this.getBlock(height - 1);
+                    newBlock.previousBlockHash = lastBlock.hash;
                 }
                 newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
-                addDataToLevelDB(newBlock).then((value) => {
+                addDataToLevelDB(JSON.stringify(newBlock)).then((value) => {
                     resolve(value);
                 }).catch((err) => {
                     reject({
@@ -65,10 +66,17 @@ export default class Blockchain {
         });
     }
     getBlock(blockHeight) {
-        return JSON.parse(JSON.stringify(getLevelDBData(blockHeight)));
-        return new Promise((resolve, reject) => {
+        return new Promise(async(resolve, reject) => {
+            const height = await this.getBlockHeight();
+            if (blockHeight > height) {
+                return reject({
+                    error: {
+                        message: 'Invalid Block number'
+                    }
+                })
+            }
             getLevelDBData(blockHeight).then((data) => {
-                return resolve(JSON.parse(JSON.stringify(data)));
+                return resolve(JSON.parse(data));
             }).catch((err) => {
                 return reject({
                     error: {

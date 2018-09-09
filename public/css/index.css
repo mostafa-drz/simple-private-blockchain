@@ -3,6 +3,8 @@ body {
 }
 
 #add-to-block-error,
-#add-to-block-success {
+#add-to-block-success,
+#block-data,
+#get-block-error {
     display: none;
 }
