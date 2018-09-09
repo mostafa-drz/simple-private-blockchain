@@ -8,6 +8,7 @@ const db = level(chainDB);
 
 // Add data to levelDB with key/value pair
 function addLevelDBData(key, value) {
+
     db.put(key, value, function(err) {
         if (err) return console.log('Block ' + key + ' submission failed', err);
     })
@@ -56,12 +57,12 @@ function getNumberOfRecordsInDB() {
 |  ===========================================================================*/
 
 
-(function theLoop(i) {
-    setTimeout(function() {
-        addDataToLevelDB('Testing data');
-        if (--i) theLoop(i);
-    }, 100);
-})(10);
+// (function theLoop(i) {
+//     setTimeout(function() {
+//         addDataToLevelDB('Testing data');
+//         if (--i) theLoop(i);
+//     }, 100);
+// })(10);
 
 module.exports = {
     getLevelDBData,
