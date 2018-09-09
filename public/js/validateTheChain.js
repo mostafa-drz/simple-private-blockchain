@@ -3,19 +3,23 @@ $(document).ready(function() {
 });
 
 function validateTheChain() {
-    axios.get(`/validate-the-chain`).then((res) => {
-        if (res.status === 200) {
-            validateTheChainSuccess(res.data);
-        } else {
-            validateTheChainError(res.data.error);
-        }
-    }).catch((err) => {
-        validateTheChainError({
-            error: {
-                message: err
+    clearChainValidationAlerts();
+    setTimeout(() => {
+        axios.get(`/validate-the-chain`).then((res) => {
+            if (res.status === 200) {
+                validateTheChainSuccess(res.data);
+            } else {
+                validateTheChainError(res.data.error);
             }
+        }).catch((err) => {
+            validateTheChainError({
+                error: {
+                    message: err
+                }
+            })
         })
-    })
+    }, 1000);
+
 }
 
 function validateTheChainSuccess(data) {
@@ -37,4 +41,11 @@ function validateTheChainError({
     } = error;
     $("#chain-validation-eror").css('display', 'block');
     $("#chain-validation-eror").text(message);
+}
+
+function clearChainValidationAlerts() {
+    $("#chain-validation-result").text("");
+    $("#chain-validation-result").css('display', 'none');
+    $("#chain-validation-eror").css('display', 'none');
+    $("#chain-validation-eror").text('');
 }

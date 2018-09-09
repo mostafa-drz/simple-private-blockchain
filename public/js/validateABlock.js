@@ -1,5 +1,6 @@
 $(document).ready(function() {
     $("#btn-validate-a-block").on('click', validateABlock);
+    $("#validation-block-number").on("keydown", clearBlockValidationAlerts);
 });
 
 function validateABlock() {
@@ -45,4 +46,11 @@ function validateABlockError({
     } = error;
     $("#validation-a-block-eror").css('display', 'block');
     $("#validation-a-block-eror").text(message);
+}
+
+function clearBlockValidationAlerts() {
+    $("#validation-a-block-eror").css('display', 'none');
+    $("#validation-a-block-eror").text('');
+    $("#validation-result").css('display', 'none');
+    $("#validation-result").text('');
 }

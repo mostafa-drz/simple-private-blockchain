@@ -1,10 +1,10 @@
 $(document).ready(function() {
     $("#btn-get-block").on('click', getABlock);
+    $("#block-number").on("keydown", clearGetABlockAlerts);
 });
 
 function getABlock() {
     const number = $("#block-number").val();
-    console.log(number);
     axios.get(`/get-a-block/${number}`).then((resp) => {
         if (resp.status === 200) {
             getBlockSuccess(resp.data);
@@ -24,6 +24,7 @@ function getABlock() {
 function getBlockSuccess(value) {
     $("#block-data").text(JSON.stringify(value));
     $("#block-data").css('display', 'block');
+
 }
 
 function getBlockError({
@@ -40,6 +41,21 @@ function getBlockError({
             }
         }
     } = error;
+
     $("#get-block-error").css('display', 'block');
     $("#get-block-error").text(message);
+
+}
+
+function clearGetABlockAlerts() {
+
+    $("#get-block-error").css('display', 'none');
+    $("#get-block-error").text('');
+
+
+
+    $("#block-data").css('display', 'none');
+    $("#block-data").text('');
+
+
 }
