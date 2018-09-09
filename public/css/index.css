@@ -5,6 +5,8 @@ body {
 #add-to-block-error,
 #add-to-block-success,
 #block-data,
-#get-block-error {
+#get-block-error,
+#validation-result,
+#validation-a-block-eror {
     display: none;
 }

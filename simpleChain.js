@@ -89,7 +89,16 @@ export default class Blockchain {
     }
 
     validateBlock(blockHeight) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async(resolve, reject) => {
+            const chainHeight = await this.getBlockHeight();
+            if (blockHeight > chainHeight) {
+                console.log('invalid block number')
+                return reject({
+                    error: {
+                        message: 'Invalid block number'
+                    }
+                });
+            }
             this.getBlock(blockHeight).then((block) => {
                 let blockHash = block.hash;
                 block.hash = '';

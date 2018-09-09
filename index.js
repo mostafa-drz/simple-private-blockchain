@@ -38,12 +38,31 @@ app.get('/get-a-block/:id', (req, res) => {
         chain.getBlock(req.params.id).then((value) => {
             res.status(200).send(value);
         }).catch((error) => {
-            res.status(500).send(error);
+            return res.status(500).send(error);
         })
     } catch (error) {
         console.log(error);
     }
 })
+
+app.get('/validate-a-block/:id', (req, res) => {
+    if (req.params.id < 0) {
+        return res.status(400).send({
+            error: {
+                message: 'invalid block number'
+            }
+        })
+    }
+    try {
+        chain.validateBlock(req.params.id).then((result) => {
+            res.status(200).send(result);
+        }).catch((error) => {
+            return res.status(400).send(error);
+        })
+    } catch (error) {
+        console.log(error);
+    }
+});
 app.listen(process.env.PORT || 3003, (error) => {
     if (error) {
         console.log(error);

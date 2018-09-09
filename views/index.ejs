@@ -34,7 +34,6 @@
                 <div class="form-group">
                     <label>Block Number:</label>
                     <input type="text" class="form-control" id="block-number">
-
                 </div>
                 <button class="btn btn-primary" id="btn-get-block">Get the Block Data</button>
                 <p id="block-data" class="alert alert-info" style="word-break: break-all"></p>
@@ -43,7 +42,17 @@
         </div>
         <hr />
         <div class="row">
-            <h2>Validate a block</h2>
+            <div class="container">
+                <h2>Validate a block</h2>
+                <div class="form-group">
+                    <label>Block Number</label>
+                    <input type="text" id="validation-block-number" class="form-control">
+                </div>
+                <button class="btn btn-primary" id="btn-validate-a-block">Validate</button>
+                <p id="validation-result"></p>
+                <p id="validation-a-block-eror" class="alert alert-danger"></p>
+            </div>
+
         </div>
         <div class="row">
             <h2>Validate the block chain</h2>
@@ -51,6 +60,7 @@
     </div>
     <script src="/js/addBlock.js"></script>
     <script src="/js/getABlock.js"></script>
+    <script src="/js/validateABlock.js"></script>
 </body>
 
 </html>
