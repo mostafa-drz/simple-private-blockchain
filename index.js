@@ -75,6 +75,16 @@ app.get('/validate-the-chain', (req, res) => {
         console.log(error);
     }
 })
+
+app.get('/block-height', (req, res) => {
+    chain.getBlockHeight().then((height) => {
+        res.status(200).send({
+            height
+        });
+    }).catch((error) => {
+        res.status(400).send(error);
+    })
+})
 app.listen(process.env.PORT || 3003, (error) => {
     if (error) {
         console.log(error);

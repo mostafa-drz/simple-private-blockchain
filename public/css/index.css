@@ -9,6 +9,8 @@ body {
 #validation-result,
 #validation-a-block-eror,
 #chain-validation-result,
-#chain-validation-error {
+#chain-validation-error,
+#block-height,
+#block-height-error {
     display: none;
 }
